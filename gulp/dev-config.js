@@ -14,7 +14,7 @@
 
 const fs = require('fs');
 
-const DEV_CONFIG_FILE = '.moodleapp-dev-config';
+const DEV_CONFIG_FILE = '.kisapp-dev-config';
 
 /**
  * Class to read and write dev-config data from a file.

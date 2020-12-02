@@ -8,9 +8,9 @@
     Publisher="CN=33CDCDF6-1EB5-4827-9897-ED25C91A32F6"
     Version="3.9.3.0" />
   <Properties>
-    <DisplayName>Moodle Desktop</DisplayName>
-    <PublisherDisplayName>Moodle Pty Ltd.</PublisherDisplayName>
-    <Description>The official app for Moodle.</Description>
+    <DisplayName>LMS Desktop</DisplayName>
+    <PublisherDisplayName>KIS co Ltd.</PublisherDisplayName>
+    <Description>The official app for LMS.</Description>
     <Logo>assets\StoreLogo.png</Logo>
   </Properties>
   <Resources>
@@ -23,19 +23,19 @@
     <rescap:Capability Name="runFullTrust"/>
   </Capabilities>
   <Applications>
-    <Application Id="com.moodle.moodlemobile" Executable="app\Moodle Desktop.exe" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="com.kis.lms" Executable="app\LMS Desktop.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
        BackgroundColor="#464646"
-       DisplayName="Moodle Desktop"
+       DisplayName="LMS Desktop"
        Square150x150Logo="assets\Square150x150Logo.png"
        Square44x44Logo="assets\Square44x44Logo.png"
-       Description="Moodle Desktop: The official desktop app for Moodle.">
+       Description="LMS Desktop: The official desktop app for LMS.">
         <uap:DefaultTile Wide310x150Logo="assets\Wide310x150Logo.png" />
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="moodlemobile">
-            <uap:DisplayName>Moodle Mobile URI Scheme</uap:DisplayName>
+          <uap:Protocol Name="lmsmobile">
+            <uap:DisplayName>LMS Mobile URI Scheme</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
       </Extensions>

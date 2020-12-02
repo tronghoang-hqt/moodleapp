@@ -25,7 +25,6 @@ import { CoreCourseLogHelperProvider } from '@core/course/providers/log-helper';
 import { AddonModForumOfflineProvider } from './offline';
 import { CoreRatingInfo } from '@core/rating/providers/rating';
 import { CoreCourseCommonModWSOptions } from '@core/course/providers/course';
-import { CoreUrlUtils } from '@providers/utils/url';
 
 /**
  * Service that provides some features for forums.
@@ -540,7 +539,7 @@ export class AddonModForumProvider {
 
                     unread: !post.postread,
                     isprivatereply: !!post.isprivatereply,
-                    tags: post.tags,
+                    tags: post.tags
                 };
 
                 if (post.groupname) {
@@ -549,29 +548,6 @@ export class AddonModForumProvider {
 
                 return newPost;
             });
-        };
-        // For some reason, the new WS doesn't use the tags exporter so it returns a different format than other WebServices.
-        // Convert the new format to the exporter one so it's the same as in other WebServices.
-        const translateTagsFormatToLegacy = (posts: any[]): any[] => {
-            posts.forEach((post) => {
-                post.tags = post.tags.map((tag) => {
-                    const viewUrl = (tag.urls && tag.urls.view) || '';
-                    const params = CoreUrlUtils.instance.extractUrlParams(viewUrl);
-
-                    return {
-                        id: tag.tagid,
-                        taginstanceid: tag.id,
-                        flag: tag.flag ? 1 : 0,
-                        isstandard: tag.isstandard,
-                        rawname: tag.displayname,
-                        name: tag.displayname,
-                        tagcollid: params.tc ? Number(params.tc) : undefined,
-                        taginstancecontextid: params.from ? Number(params.from) : undefined,
-                    };
-                });
-            });
-
-            return posts;
         };
 
         const params = {
@@ -593,8 +569,6 @@ export class AddonModForumProvider {
 
                     if (wsName == 'mod_forum_get_forum_discussion_posts') {
                         response.posts = translateLegacyPostsFormat(response.posts);
-                    } else {
-                        response.posts = translateTagsFormatToLegacy(response.posts);
                     }
                     this.storeUserData(response.posts);
 

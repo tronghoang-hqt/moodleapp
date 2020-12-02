@@ -140,28 +140,110 @@ export class CoreLoginSitePage {
         this.showScanQR = this.utils.canScanQR() && (typeof CoreConfigConstants['displayqronsitescreen'] == 'undefined' ||
             !!CoreConfigConstants['displayqronsitescreen']);
 
-        this.siteForm = fb.group({
-            siteUrl: [url, this.moodleUrlValidator()]
+        // this.siteForm = fb.group({
+        //     siteUrl: [url, this.moodleUrlValidator()]
+        // });
+
+        // this.searchFnc = this.utils.debounce(async (search: string) => {
+        //     search = search.trim();
+
+        //     if (search.length >= 3) {
+        //         // Update the sites list.
+        //         this.sites = await this.sitesProvider.findSites(search);
+
+        //         // Add UI tweaks.
+        //         this.sites = this.extendCoreLoginSiteInfo(this.sites);
+
+        //         this.hasSites = !!this.sites.length;
+        //     } else {
+        //         // Not reseting the array to allow animation to be displayed.
+        //         this.hasSites = false;
+        //     }
+
+        //     this.loadingSites = false;
+        // }, 1000);
+        this.connectSite()
+    }
+
+    connectSite(): void {
+        var url="https://lms.kis-v.com:89"
+        this.sitesProvider.findSites(url).then(data=>{
+            this.sites = this.extendCoreLoginSiteInfo(this.sites);
+            this.hasSites = !!this.sites.length;
+        }).catch(err=>{
+            this.hasSites = false;
+            this.domUtils.showErrorModal('core.login.errorexampleurl', true);
+            return
         });
 
-        this.searchFnc = this.utils.debounce(async (search: string) => {
-            search = search.trim();
+        this.appProvider.closeKeyboard();
 
-            if (search.length >= 3) {
-                // Update the sites list.
-                this.sites = await this.sitesProvider.findSites(search);
+        if (!url) {
+            this.domUtils.showErrorModal('core.login.siteurlrequired', true);
 
-                // Add UI tweaks.
-                this.sites = this.extendCoreLoginSiteInfo(this.sites);
+            return;
+        }
 
-                this.hasSites = !!this.sites.length;
-            } else {
-                // Not reseting the array to allow animation to be displayed.
-                this.hasSites = false;
-            }
+        if (!this.appProvider.isOnline()) {
+            this.domUtils.showErrorModal('core.networkerrormsg', true);
 
-            this.loadingSites = false;
-        }, 1000);
+            return;
+        }
+
+        url = url.trim();
+
+        if (url.match(/^(https?:\/\/)?campus\.example\.edu/)) {
+            this.showLoginIssue(null, this.translate.instant('core.login.errorexampleurl'));
+
+            return;
+        }
+
+        const modal = this.domUtils.showModalLoading(),
+            siteData = this.sitesProvider.getDemoSiteData(url);
+
+        if (siteData) {
+            // It's a demo site.
+            this.sitesProvider.getUserToken(siteData.url, siteData.username, siteData.password).then((data) => {
+                return this.sitesProvider.newSite(data.siteUrl, data.token, data.privateToken).then(() => {
+
+                    this.domUtils.triggerFormSubmittedEvent(this.formElement, true);
+
+                    return this.loginHelper.goToSiteInitialPage();
+                }, (error) => {
+                    this.loginHelper.treatUserTokenError(siteData.url, error, siteData.username, siteData.password);
+                    if (error.loggedout) {
+                        this.navCtrl.setRoot('CoreLoginSitePage');
+                    }
+                });
+            }, (error) => {
+                this.loginHelper.treatUserTokenError(siteData.url, error, siteData.username, siteData.password);
+                if (error.loggedout) {
+                    this.navCtrl.setRoot('CoreLoginSitePage');
+                }
+            }).finally(() => {
+                modal.dismiss();
+            });
+
+        } else {
+            // Not a demo site.
+            this.sitesProvider.checkSite(url)
+                .catch((error) => {
+                    // Attempt guessing the domain if the initial check failed
+                    const domain = CoreUrl.guessMoodleDomain(url);
+
+                    if (domain && domain != url) {
+                        return this.sitesProvider.checkSite(domain).catch((secondError) => {
+                            // Try to use the first error.
+                            return Promise.reject(error || secondError);
+                        });
+                    }
+
+                    return Promise.reject(error);
+                })
+                .then((result) => this.login(result, this.sites[0]))
+                .catch((error) => this.showLoginIssue(url, error))
+                .finally(() => modal.dismiss());
+        }
     }
 
     /**
@@ -239,13 +321,13 @@ export class CoreLoginSitePage {
                 }, (error) => {
                     this.loginHelper.treatUserTokenError(siteData.url, error, siteData.username, siteData.password);
                     if (error.loggedout) {
-                        this.navCtrl.setRoot('CoreLoginSitesPage');
+                        this.navCtrl.setRoot('CoreLoginSitePage');
                     }
                 });
             }, (error) => {
                 this.loginHelper.treatUserTokenError(siteData.url, error, siteData.username, siteData.password);
                 if (error.loggedout) {
-                    this.navCtrl.setRoot('CoreLoginSitesPage');
+                    this.navCtrl.setRoot('CoreLoginSitePage');
                 }
             }).finally(() => {
                 modal.dismiss();

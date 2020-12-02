@@ -32,7 +32,9 @@ export class CoreLoginSiteOnboardingPage {
 
     constructor(
             protected viewCtrl: ViewController,
-            ) {}
+            ) {
+                this.skipPage()
+            }
 
     /**
      * Go to next step.
@@ -68,6 +70,10 @@ export class CoreLoginSiteOnboardingPage {
     skip(e: Event): void {
         e.stopPropagation();
 
+        this.saveOnboardingDone();
+        this.viewCtrl.dismiss();
+    }
+    skipPage(): void {
         this.saveOnboardingDone();
         this.viewCtrl.dismiss();
     }

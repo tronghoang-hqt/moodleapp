@@ -442,7 +442,7 @@ function generate_local_moodlemobileapp($keys, $translations) {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string[\'appstoredescription\'] = \'NOTE: This official Moodle Mobile app will ONLY work with Moodle sites that have been set up to allow it.  Please talk to your Moodle administrator if you have any problems connecting.
+$string[\'appstoredescription\'] = \'NOTE: This official LMS Mobile app will ONLY work with Moodle sites that have been set up to allow it.  Please talk to your Moodle administrator if you have any problems connecting.
 
 If your Moodle site has been configured correctly, you can use this app to:
 
@@ -468,7 +468,7 @@ Prevent phone from sleeping - So you can receive push notifications anytime\';'.
             $string .= '$string[\''.$key.'\'] = \''.str_replace("'", "\'", $translations[$key]).'\';'."\n";
         }
     }
-    $string .= '$string[\'pluginname\'] = \'Moodle Mobile language strings\';'."\n";
+    $string .= '$string[\'pluginname\'] = \'LMS Mobile language strings\';'."\n";
 
     file_put_contents('../../moodle-local_moodlemobileapp/lang/en/local_moodlemobileapp.php', $string."\n");
 }

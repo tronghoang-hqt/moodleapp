@@ -513,7 +513,7 @@ export class CoreLoginHelperProvider {
         if (this.isFixedUrlSet()) {
             // Fixed URL is set, go to credentials page.
             const url = typeof CoreConfigConstants.siteurl == 'string' ?
-                CoreConfigConstants.siteurl : CoreConfigConstants.siteurl[0].url;
+                CoreConfigConstants.siteurl : CoreConfigConstants.siteurl[0]['url'];
 
             pageName = 'CoreLoginCredentialsPage';
             params = { siteUrl: url };
@@ -546,7 +546,7 @@ export class CoreLoginHelperProvider {
 
         if (page == currentPage) {
             // Already at page, nothing to do.
-        } else if (page == 'CoreLoginSitesPage') {
+        } else if (page == 'CoreLoginSitePage') {
             // Just open the page as root.
             return navCtrl.setRoot(page, params);
         } else if (page == 'CoreLoginCredentialsPage' && currentPage == 'CoreLoginSitePage') {
@@ -557,7 +557,7 @@ export class CoreLoginHelperProvider {
             return this.sitesProvider.hasSites().then((hasSites) => {
                 if (hasSites) {
                     // There are sites stored, open sites page first to be able to go back.
-                    navCtrl.setRoot('CoreLoginSitesPage');
+                    navCtrl.setRoot('CoreLoginSitePage');
 
                     return navCtrl.push(page, params, {animate: false});
                 } else {
@@ -779,7 +779,7 @@ export class CoreLoginHelperProvider {
                 }
             }).catch((error) => {
                 // Site doesn't exist.
-                return navCtrl.setRoot('CoreLoginSitesPage');
+                return navCtrl.setRoot('CoreLoginSitePage');
             }).finally(() => {
                 modal.dismiss();
             });
@@ -1066,7 +1066,7 @@ export class CoreLoginHelperProvider {
             if (siteId) {
                 return this.loadSiteAndPage(page, params, siteId);
             } else {
-                return CoreApp.instance.getRootNavController().setRoot('CoreLoginSitesPage');
+                return CoreApp.instance.getRootNavController().setRoot('CoreLoginSitePage');
             }
         }
 

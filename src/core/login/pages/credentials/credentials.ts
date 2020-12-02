@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreAppProvider } from '@providers/app';
 import { CoreUtils } from '@providers/utils/utils';
@@ -68,7 +68,8 @@ export class CoreLoginCredentialsPage implements OnDestroy {
             private loginHelper: CoreLoginHelperProvider,
             private domUtils: CoreDomUtilsProvider,
             private translate: TranslateService,
-            private eventsProvider: CoreEventsProvider) {
+            private eventsProvider: CoreEventsProvider,
+            private platform:Platform) {
 
         this.siteUrl = navParams.get('siteUrl');
         this.siteName = navParams.get('siteName') || null;
@@ -129,6 +130,8 @@ export class CoreLoginCredentialsPage implements OnDestroy {
             this.siteChecked = true;
             this.pageLoaded = true;
         }
+        this.platform.registerBackButtonAction( ()=> {
+        }, 100);
     }
 
     /**
@@ -273,7 +276,7 @@ export class CoreLoginCredentialsPage implements OnDestroy {
         }).catch((error) => {
             this.loginHelper.treatUserTokenError(siteUrl, error, username, password);
             if (error.loggedout) {
-                this.navCtrl.setRoot('CoreLoginSitesPage');
+                this.navCtrl.setRoot('CoreLoginSitePage');
             } else if (error.errorcode == 'forcepasswordchangenotice') {
                 // Reset password field.
                 this.credForm.controls.password.reset();

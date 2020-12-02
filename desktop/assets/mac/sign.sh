@@ -5,7 +5,7 @@
 #
 
 # Name of your app.
-APP="Moodle Desktop"
+APP="LMS Desktop"
 # The name of certificates you requested.
 APP_KEY="3rd Party Mac Developer Application: Moodle Pty Ltd (2NU57U5PAW)"
 INSTALLER_KEY="3rd Party Mac Developer Installer: Moodle Pty Ltd (2NU57U5PAW)"

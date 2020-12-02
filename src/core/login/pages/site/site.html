@@ -54,10 +54,10 @@
 
                 <div *ngIf="!hasSites && loadingSites" class="core-login-site-nolist-loading"><ion-spinner></ion-spinner></div>
             </ng-container>
-
+<!-- 
             <ion-item *ngIf="siteSelector == 'url'" no-lines>
                 <button ion-button block [disabled]="!siteForm.valid" text-wrap>{{ 'core.login.connect' | translate }}</button>
-            </ion-item>
+            </ion-item> -->
         </form>
 
         <ng-container *ngIf="fixedSites">
